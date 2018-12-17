@@ -1,0 +1,90 @@
+if (room == room0) //if you're in the sprite-making room
+{
+    if (keyboard_check_pressed(vk_enter)) // if you press enter
+    {
+        pencolor = get_color(pencolor); //get your pen color
+        penalpha = real(get_string("Alpha Value", string(penalpha))); //get your pen alpha, 
+        //NEVER use Game Maker's get_string, get_integer, or show_message in a real game. It 
+        //annoys people like crazy. I'm using get_string and converting it so that decimals 
+        //can be used.
+    }
+    
+    if (keyboard_check_pressed(ord("1"))) //if you press 1
+        pen = 0; //select the pen
+    if (keyboard_check_pressed(ord("2"))) //if you press 2
+        pen = 1; //select the eraser
+    
+    surface_set_target(custom); //prepare to draw to the custom surface
+    if (mouse_check_button(mb_left)) //if you are holding left mouse down
+    {
+        draw_set_color(pencolor); //set the color
+        draw_set_alpha(penalpha); //set the alpha
+        switch (pen) //figure out which pen you're selecting
+        {
+            case 0:
+                //draw a point at your mouse offset by player's x value plus his origin.
+                //This is so it places the point in the right area, because you have to draw
+                //on surfaces based on the top-left corner of the screen. If you don't understand,
+                //see if the help can help you! Hehehe...
+                draw_point(mouse_x - x + sprite_width / 2, mouse_y - y + sprite_width / 2); 
+                break;
+            case 1:
+                draw_set_blend_mode(bm_subtract); //make a subtraction
+                //do the same as above but with an eraser
+                draw_point(mouse_x - x + sprite_width / 2, mouse_y - y + sprite_width / 2); 
+                draw_set_blend_mode(bm_normal); //set to normal
+                break;
+        }
+        draw_set_color(c_black); //reset the color
+        draw_set_alpha(1); //reset the alpha
+        saved = false; //set saved to false so that the computer knows he has changed since 
+        //his last save.
+    }
+    surface_reset_target(); //set the drawing target back to the normal screen
+    
+    if (keyboard_check(vk_control) && keyboard_check(ord("S"))) // if ctrl+s are pressed
+    {
+        surface_save(custom, filename); //save the surface to the file name
+        //load the file
+        spr_hat = sprite_add(filename, 1, false, false, sprite_width / 2, sprite_height / 2);
+        saved = true; //set saved to true so that the game knows no changes have been made.
+    }
+    if (keyboard_check(vk_right)) //if you press the right arrow
+    {
+        if (!saved) //if you haven't saved changes
+            //see if you want to save
+            checkdiscard = show_question("Do you want to continue, discarding changes?");
+        else checkdiscard = true; //if you have saved, set checkdiscard to true so you can 
+            //continue the game
+        if (checkdiscard) //if you want to discard (or you already saved)
+            room_goto_next(); //go to the next room
+    }
+}
+if (room == room1) //if you're in the playing room
+{
+    image_xscale = 1 / 4; //make the octopus normal-sized. I scaled him up so you could see
+    //him in the draw room. You could alternatively change the room scale, but that makes 
+    //everything blurry, and I don't like that too much.
+    image_yscale = 1 / 4; //same
+    if (place_free(x, y + 1)) //gravity stuff from here on down, look it up if you want a tutorial
+        gravity = .125;
+    else 
+    {
+        spd *= .95;
+        gravity = 0;
+    }
+    gravity_direction = 270;
+    if (vspeed > 1)
+        vspeed = 1;
+    spd = clamp(spd, -4, 4);
+    if (keyboard_check(ord("A")))
+        if (place_free(x - /*ceil(spd * 2) - 1*/spd, y))
+            spd -= .1;
+        else spd = 0;
+    if (keyboard_check(ord("D")))
+        if (place_free(x + /*ceil(spd * 2) + 1*/spd, y))
+            spd += .1;
+        else spd = 0;
+    if (keyboard_check_pressed(ord("W")))
+        vspeed = -3;
+}
