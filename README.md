@@ -1,7 +1,7 @@
 # Character-Creator
 An example game that demonstrates drawing a character in-game and playing with it
 
-In response to [a forum user's need](http://gmc.yoyogames.com/index.php?showtopic=586544&hl=), I created an example game in which the player can draw on a character to customize it, save it, and play with it!
+In response to [a forum user's need](http://gmc.yoyogames.com/index.php?showtopic=586544&hl=), I created an example game in which the player can draw on a character to customize it, save it, and play with it! See the tutorial [here](http://gmc.yoyogames.com/index.php?showtopic=587949&hl=).
 
 I wrote [other small tutorials](http://gmc.yoyogames.com/index.php?app=core&module=search&do=user_activity&mid=361111) for other users to explain how to solve problems they had in Summer 2013.
 
